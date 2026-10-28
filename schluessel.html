@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Push-Schlüssel erzeugen</title>
+<style>
+  :root{--bg:#f2f2f7;--fg:#000;--muted:#6e6e73;--surface:#fff}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:24px 16px}
+  main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  h1{font-size:24px;margin:0}
+  p{margin:0;color:var(--muted)}
+  label{font-size:13px;text-transform:uppercase;color:var(--muted)}
+  textarea{width:100%;box-sizing:border-box;border:0;border-radius:12px;padding:12px;font:14px ui-monospace,Menlo,monospace;min-height:70px;background:var(--surface);overflow-wrap:anywhere}
+  button{border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:600;background:#000;color:#fff;cursor:pointer}
+  .row{display:flex;flex-direction:column;gap:6px}
+  .warn{background:#fff;border-left:4px solid #000;border-radius:12px;padding:12px 14px;color:#000}
+</style>
+</head>
+<body>
+<main>
+  <h1>Push-Schlüssel erzeugen</h1>
+  <p>Diese Seite erzeugt die Schlüssel und ein Passwort für die Benachrichtigungen. Alles passiert nur hier im Browser, nichts wird verschickt.</p>
+  <button type="button" id="go">Schlüssel erzeugen</button>
+  <div class="row"><label for="pub">Öffentlicher Schlüssel (VAPID_PUBLIC_KEY)</label><textarea id="pub" readonly></textarea></div>
+  <div class="row"><label for="priv">Privater Schlüssel (VAPID_PRIVATE_KEY)</label><textarea id="priv" readonly></textarea></div>
+  <div class="row"><label for="sec">Passwort für die Push-Funktion (NOTIFY_SECRET)</label><textarea id="sec" readonly></textarea></div>
+  <p class="warn">Den öffentlichen Schlüssel trägst du in <b>config.js</b> und bei Supabase ein. Den privaten Schlüssel und das Passwort <b>nur</b> bei Supabase unter „Edge Functions → Secrets“ (das Passwort zusätzlich in <b>push.sql</b>). Nirgends sonst speichern oder weitergeben. Wenn du die Seite neu lädst, sind die Schlüssel weg. Das ist Absicht.</p>
+</main>
+<script>
+const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+document.getElementById('go').onclick = async () => {
+  const kp = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  const pub = await crypto.subtle.exportKey('raw', kp.publicKey);
+  const jwk = await crypto.subtle.exportKey('jwk', kp.privateKey);
+  document.getElementById('pub').value = b64u(pub);
+  document.getElementById('priv').value = jwk.d;
+  document.getElementById('sec').value = b64u(crypto.getRandomValues(new Uint8Array(32)));
+};
+</script>
+</body>
+</html>

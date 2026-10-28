@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+<meta name="referrer" content="no-referrer">
+<title>FaSt Themenbrett</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="offline" id="offline" hidden>Keine Verbindung. Änderungen sind gerade nicht möglich.</div>
+<header class="top">
+  <div class="brand">Themenbrett</div>
+  <button class="menubtn" id="menuBtn" type="button" aria-haspopup="dialog" hidden>Menü</button>
+</header>
+<div class="demo" id="demoNote" hidden>Demo-Modus: Die Daten bleiben nur in diesem Browser. Um die andere Seite zu sehen, im Menü abmelden und als die andere Person anmelden.</div>
+
+<main id="main" hidden>
+  <section class="col">
+    <div class="tabs" id="tabs"></div>
+    <input class="search" id="search" type="search" placeholder="Karten durchsuchen" aria-label="Karten durchsuchen" autocomplete="off">
+    <div class="list" id="list"></div>
+  </section>
+  <section class="detail closed" id="detail"></section>
+</main>
+
+<button class="fab" id="fab" type="button" hidden>+ Neue Karte</button>
+<div id="overlay"></div>
+<div id="gate"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<noscript>Bitte JavaScript aktivieren.</noscript>
+<script type="module" src="app.js"></script>
+</body>
+</html>
