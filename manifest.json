@@ -1,6 +1,7 @@
 {
   "name": "FaSt Themenbrett",
   "short_name": "Themenbrett",
+  "id": "/themenbrett/?v=2",
   "lang": "de",
   "start_url": "./",
   "scope": "./",
